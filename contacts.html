@@ -3,115 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Контакти - DigitalBoost</title>
+    <title>Контакти – AdsForYou</title>
 </head>
 <body>
 
     <header>
-        <h1>DigitalBoost</h1>
-        <p>Рекламне агентство</p>
+        <h1>AdsForYou</h1>
+        <p>Завжди раді обговорити ваш проєкт.</p>
+        <hr>
     </header>
 
     <nav>
-        <a href="index.html">Головна</a> |
-        <a href="about.html">Про агентство</a> |
-        <a href="services.html">Послуги</a> |
-        <a href="contacts.html">Контакти</a> |
-        <a href="login.html">Вхід</a> |
-        <a href="register.html">Реєстрація</a>
+        <ul>
+            <li><a href="index.html">Головна сторінка</a></li>
+            <li><a href="about.html">Про агентство</a></li>
+            <li><a href="services.html">Наші послуги</a></li>
+            <li><a href="contacts.html">Контакти</a></li>
+            <li><a href="login.html">Вхід</a></li>
+            <li><a href="register.html">Реєстрація</a></li>
+            <li><a href="profile.html">Особистий кабінет</a></li>
+            <li><a href="admin.html">Адміністративна панель</a></li>
+        </ul>
+        <hr>
     </nav>
 
     <main>
-
-        <h2>Контакти</h2>
+        <section>
+            <h2>Контактна інформація</h2>
+            <p>Ви можете зв'язатися з нами будь-яким зручним для вас способом у робочий час.</p>
+            
+            <ul>
+                <li><strong>Телефон (Viber/Telegram):</strong> +38 (050) 123-45-67</li>
+                <li><strong>Email для співпраці:</strong> hello@adsforyou.ua</li>
+                <li><strong>Фізична адреса:</strong> м. Київ, вул. Інноваційна, 12, офіс 404.</li>
+                <li><strong>Графік роботи:</strong> Понеділок - П'ятниця, з 10:00 до 18:00.</li>
+            </ul>
+        </section>
 
         <section>
-            <h3>Контактна інформація</h3>
-
+            <h2>Відповіді на часті запитання (FAQ)</h2>
             <article>
-                <h4>Телефон</h4>
-                <p>+38 (044) 123-45-67</p>
-                <p>+38 (067) 987-65-43</p>
+                <h3>Як швидко ви відповідаєте на запит?</h3>
+                <p>Зазвичай наш менеджер опрацьовує заявки протягом 2-3 робочих годин.</p>
             </article>
-
             <article>
-                <h4>Електронна пошта</h4>
-                <p>info@digitalboost.ua</p>
-                <p>support@digitalboost.ua</p>
-            </article>
-
-            <article>
-                <h4>Адреса офісу</h4>
-                <p>Україна, м. Київ, 01001</p>
-                <p>вул. Хрещатик, 1, офіс 205</p>
-            </article>
-
-            <article>
-                <h4>Години роботи</h4>
-                <p>Понеділок — П'ятниця: 09:00 — 18:00</p>
-                <p>Субота: 10:00 — 15:00</p>
-                <p>Неділя: вихідний</p>
+                <h3>Чи працюєте ви з клієнтами з інших міст?</h3>
+                <p>Так, 80% нашої роботи відбувається онлайн. Ми налаштували ефективні процеси дистанційної комунікації.</p>
             </article>
         </section>
 
         <section>
-            <h3>Форма зворотного зв'язку</h3>
-            <p>
-                Заповніть форму нижче, і ми зв'яжемося з вами
-                протягом одного робочого дня.
-            </p>
-
+            <h2>Форма зворотного зв'язку</h2>
+            <p>Будь ласка, заповніть форму нижче, щоб ми могли підготуватися до нашої першої розмови.</p>
+            
             <form action="#" method="post">
+                <fieldset>
+                    <legend>Ваші контактні дані</legend>
+                    <p>
+                        <label for="user-name">Ваше ім'я та прізвище:</label><br>
+                        <input type="text" id="user-name" name="user_name" placeholder="Наприклад: Олена Коваленко" required size="40">
+                    </p>
+                    <p>
+                        <label for="user-phone">Контактний телефон:</label><br>
+                        <input type="tel" id="user-phone" name="user_phone" placeholder="+380" required size="40">
+                    </p>
+                    <p>
+                        <label for="user-email">Email адреса:</label><br>
+                        <input type="email" id="user-email" name="user_email" placeholder="example@mail.com" required size="40">
+                    </p>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Інформація про проєкт</legend>
+                    <p>
+                        <label for="project-link">Посилання на ваш Instagram або TikTok (якщо є):</label><br>
+                        <input type="url" id="project-link" name="project_link" placeholder="https://instagram.com/..." size="60">
+                    </p>
+                    
+                    <p>Яка послуга вас цікавить насамперед?</p>
+                    <p>
+                        <input type="radio" id="service-ads" name="interest_service" value="ads">
+                        <label for="service-ads">Таргетована реклама</label><br>
+                        
+                        <input type="radio" id="service-smm" name="interest_service" value="smm">
+                        <label for="service-smm">Комплексне ведення сторінки</label><br>
+                        
+                        <input type="radio" id="service-reels" name="interest_service" value="reels">
+                        <label for="service-reels">Створення Reels</label><br>
+                        
+                        <input type="radio" id="service-other" name="interest_service" value="other">
+                        <label for="service-other">Інше / Поки не знаю</label>
+                    </p>
+
+                    <p>
+                        <label for="user-message">Опишіть ваш бізнес та основну ціль (коротко):</label><br>
+                        <textarea id="user-message" name="user_message" rows="6" cols="60" required></textarea>
+                    </p>
+                </fieldset>
 
                 <p>
-                    <label for="name">Ваше ім'я:</label><br>
-                    <input type="text" id="name" name="name" placeholder="Введіть ваше ім'я" required>
-                </p>
-
-                <p>
-                    <label for="email">Електронна пошта:</label><br>
-                    <input type="email" id="email" name="email" placeholder="Введіть вашу email адресу" required>
-                </p>
-
-                <p>
-                    <label for="phone">Телефон:</label><br>
-                    <input type="tel" id="phone" name="phone" placeholder="+38 (0XX) XXX-XX-XX">
-                </p>
-
-                <p>
-                    <label for="subject">Тема повідомлення:</label><br>
-                    <input type="text" id="subject" name="subject" placeholder="Введіть тему повідомлення">
-                </p>
-
-                <p>
-                    <label for="message">Повідомлення:</label><br>
-                    <textarea id="message" name="message" rows="6" cols="50"
-                        placeholder="Введіть ваше повідомлення" required></textarea>
-                </p>
-
-                <p>
-                    <button type="submit">Надіслати повідомлення</button>
+                    <button type="submit">Надіслати заявку</button>
                     <button type="reset">Очистити форму</button>
                 </p>
-
             </form>
         </section>
-
     </main>
 
     <footer>
-        <p>© 2024 DigitalBoost. Усі права захищені.</p>
-        <p>
-            Телефон: +38 (044) 123-45-67 |
-            Email: info@digitalboost.ua |
-            Адреса: м. Київ, вул. Хрещатик, 1
-        </p>
-        <p>
-            <a href="index.html">Головна</a> |
-            <a href="about.html">Про агентство</a> |
-            <a href="services.html">Послуги</a> |
-            <a href="contacts.html">Контакти</a>
-        </p>
+        <hr>
+        <p>&copy; 2024 AdsForYou. Усі права захищені.</p>
     </footer>
 
 </body>

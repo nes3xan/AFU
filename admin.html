@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Адмін-панель – AdsForYou</title>
+</head>
+<body>
+
+    <header>
+        <h1>AdsForYou: Панель керування (CRM)</h1>
+        <p>Робочий простір адміністратора.</p>
+        <hr>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="admin.html">Дашборд</a></li>
+            <li><a href="#">Користувачі</a></li>
+            <li><a href="#">Управління послугами</a></li>
+            <li><a href="#">Заявки з сайту</a></li>
+            <li><a href="index.html">Перейти на сайт</a></li>
+            <li><a href="index.html">Вийти (Logout)</a></li>
+        </ul>
+        <hr>
+    </nav>
+
+    <main>
+        <!-- Інформаційний блок адміністратора -->
+        <section>
+            <h2>Огляд системи</h2>
+            <article>
+                <p><strong>Адміністратор:</strong> Максим (Головний менеджер)</p>
+                <p><strong>Останній вхід:</strong> Сьогодні о 09:15</p>
+                <p><strong>Сповіщення системи:</strong> У вас 3 нові нерозглянуті заявки з контактної форми.</p>
+            </article>
+        </section>
+
+        <hr>
+
+        <!-- Список користувачів -->
+        <section>
+            <h2>Керування базою клієнтів (Користувачі)</h2>
+            <p>Список останніх зареєстрованих користувачів у системі:</p>
+            
+            <table border="1" cellpadding="8" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ПІБ Клієнта</th>
+                        <th>Email</th>
+                        <th>Статус</th>
+                        <th>Активні послуги</th>
+                        <th>Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1042</td>
+                        <td>Андрій Шевченко</td>
+                        <td>andriy.sh@example.com</td>
+                        <td>Активний</td>
+                        <td>2</td>
+                        <td><button type="button">Переглянути</button></td>
+                    </tr>
+                    <tr>
+                        <td>1043</td>
+                        <td>Марина Коваль</td>
+                        <td>marina.k@mail.com</td>
+                        <td>Очікує оплати</td>
+                        <td>1</td>
+                        <td><button type="button">Переглянути</button></td>
+                    </tr>
+                    <tr>
+                        <td>1044</td>
+                        <td>Олег Ткаченко</td>
+                        <td>olegtkach@net.ua</td>
+                        <td>Новий</td>
+                        <td>0</td>
+                        <td><button type="button">Переглянути</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <hr>
+
+        <!-- Список послуг та керування ними -->
+        <section>
+            <h2>Керування каталогом послуг</h2>
+            <p>Редагування послуг, що відображаються на публічній сторінці сайту.</p>
+            
+            <table border="1" cellpadding="8" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Назва послуги</th>
+                        <th>Відображення на сайті</th>
+                        <th>Остання зміна</th>
+                        <th>Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Instagram реклама</td>
+                        <td>Увімкнено</td>
+                        <td>01.09.2023</td>
+                        <td><button type="button">Редагувати</button> <button type="button">Приховати</button></td>
+                    </tr>
+                    <tr>
+                        <td>TikTok реклама</td>
+                        <td>Увімкнено</td>
+                        <td>01.09.2023</td>
+                        <td><button type="button">Редагувати</button> <button type="button">Приховати</button></td>
+                    </tr>
+                    <tr>
+                        <td>Створення Reels</td>
+                        <td>Увімкнено</td>
+                        <td>15.09.2023</td>
+                        <td><button type="button">Редагувати</button> <button type="button">Приховати</button></td>
+                    </tr>
+                    <tr>
+                        <td>Консультація (архів)</td>
+                        <td>Вимкнено</td>
+                        <td>20.08.2023</td>
+                        <td><button type="button">Редагувати</button> <button type="button">Відновити</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <br>
+            <form action="#" method="get">
+                <button type="button">+ Додати нову послугу</button>
+            </form>
+        </section>
+
+    </main>
+
+    <footer>
+        <hr>
+        <p>&copy; 2024 AdsForYou. Внутрішня система керування (Confidential).</p>
+    </footer>
+
+</body>
+</html>

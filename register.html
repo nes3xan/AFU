@@ -3,87 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Реєстрація - DigitalBoost</title>
+    <title>Реєстрація – AdsForYou</title>
 </head>
 <body>
 
     <header>
-        <h1>DigitalBoost</h1>
-        <p>Рекламне агентство</p>
+        <h1>AdsForYou</h1>
+        <p>Створіть особистий кабінет клієнта.</p>
+        <hr>
     </header>
 
     <nav>
-        <a href="index.html">Головна</a> |
-        <a href="about.html">Про агентство</a> |
-        <a href="services.html">Послуги</a> |
-        <a href="contacts.html">Контакти</a> |
-        <a href="login.html">Вхід</a> |
-        <a href="register.html">Реєстрація</a>
+        <ul>
+            <li><a href="index.html">Головна сторінка</a></li>
+            <li><a href="about.html">Про агентство</a></li>
+            <li><a href="services.html">Наші послуги</a></li>
+            <li><a href="contacts.html">Контакти</a></li>
+            <li><a href="login.html">Вхід</a></li>
+        </ul>
+        <hr>
     </nav>
 
     <main>
-
         <section>
-            <h2>Реєстрація нового облікового запису</h2>
-            <p>Заповніть форму нижче, щоб створити обліковий запис.</p>
-
-            <form action="#" method="post">
-
-                <p>
-                    <label for="first-name">Ім'я:</label><br>
-                    <input type="text" id="first-name" name="first-name"
-                        placeholder="Введіть ваше ім'я" required>
-                </p>
-
-                <p>
-                    <label for="last-name">Прізвище:</label><br>
-                    <input type="text" id="last-name" name="last-name"
-                        placeholder="Введіть ваше прізвище" required>
-                </p>
-
-                <p>
-                    <label for="email">Електронна пошта:</label><br>
-                    <input type="email" id="email" name="email"
-                        placeholder="Введіть вашу email адресу" required>
-                </p>
-
-                <p>
-                    <label for="password">Пароль:</label><br>
-                    <input type="password" id="password" name="password"
-                        placeholder="Введіть пароль (мінімум 8 символів)" required minlength="8">
-                </p>
-
-                <p>
-                    <label for="confirm-password">Підтвердження пароля:</label><br>
-                    <input type="password" id="confirm-password" name="confirm-password"
-                        placeholder="Повторіть пароль" required minlength="8">
-                </p>
-
-                <p>
-                    <button type="submit">Зареєструватися</button>
-                    <button type="reset">Очистити форму</button>
-                </p>
-
-            </form>
-
-            <p>Вже маєте обліковий запис? <a href="login.html">Увійти</a></p>
+            <h2>Чому варто зареєструватися?</h2>
+            <ul>
+                <li>Зручний доступ до статусів ваших активних послуг.</li>
+                <li>Можливість швидко оновлювати контактні дані для нашої команди.</li>
+                <li>Історія співпраці та можливість завантажити електронні звіти.</li>
+            </ul>
         </section>
 
+        <section>
+            <h2>Форма реєстрації</h2>
+            <form action="#" method="post">
+                <fieldset>
+                    <legend>Персональні дані</legend>
+                    <p>
+                        <label for="reg-firstname">Ім'я:</label><br>
+                        <input type="text" id="reg-firstname" name="first_name" required size="30">
+                    </p>
+                    <p>
+                        <label for="reg-lastname">Прізвище:</label><br>
+                        <input type="text" id="reg-lastname" name="last_name" required size="30">
+                    </p>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Дані для входу</legend>
+                    <p>
+                        <label for="reg-email">Електронна пошта (Email):</label><br>
+                        <input type="email" id="reg-email" name="email" required size="30">
+                    </p>
+                    <p>
+                        <label for="reg-password">Пароль (мінімум 8 символів):</label><br>
+                        <input type="password" id="reg-password" name="password" required size="30">
+                    </p>
+                    <p>
+                        <label for="reg-confirm-password">Підтвердження пароля:</label><br>
+                        <input type="password" id="reg-confirm-password" name="confirm_password" required size="30">
+                    </p>
+                </fieldset>
+
+                <p>
+                    <input type="checkbox" id="reg-terms" name="terms" required>
+                    <label for="reg-terms">Я погоджуюсь на обробку моїх персональних даних згідно з політикою конфіденційності.</label>
+                </p>
+
+                <p>
+                    <button type="submit">Створити акаунт</button>
+                </p>
+            </form>
+            <p>Вже є акаунт клієнта? <a href="login.html">Перейдіть до сторінки входу</a>.</p>
+        </section>
     </main>
 
     <footer>
-        <p>© 2024 DigitalBoost. Усі права захищені.</p>
-        <p>
-            Телефон: +38 (044) 123-45-67 |
-            Email: info@digitalboost.ua |
-            Адреса: м. Київ, вул. Хрещатик, 1
-        </p>
-        <p>
-            <a href="index.html">Головна</a> |
-            <a href="about.html">Про агентство</a> |
-            <a href="services.html">Послуги</a> |
-            <a href="contacts.html">Контакти</a>
-        </p>
+        <hr>
+        <p>&copy; 2024 AdsForYou.</p>
     </footer>
 
 </body>

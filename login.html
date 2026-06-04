@@ -3,68 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вхід - DigitalBoost</title>
+    <title>Вхід – AdsForYou</title>
 </head>
 <body>
 
     <header>
-        <h1>DigitalBoost</h1>
-        <p>Рекламне агентство</p>
+        <h1>AdsForYou</h1>
+        <p>Авторизація в системі.</p>
+        <hr>
     </header>
 
     <nav>
-        <a href="index.html">Головна</a> |
-        <a href="about.html">Про агентство</a> |
-        <a href="services.html">Послуги</a> |
-        <a href="contacts.html">Контакти</a> |
-        <a href="login.html">Вхід</a> |
-        <a href="register.html">Реєстрація</a>
+        <ul>
+            <li><a href="index.html">Головна сторінка</a></li>
+            <li><a href="about.html">Про агентство</a></li>
+            <li><a href="services.html">Наші послуги</a></li>
+            <li><a href="contacts.html">Контакти</a></li>
+            <li><a href="register.html">Реєстрація</a></li>
+        </ul>
+        <hr>
     </nav>
 
     <main>
-
         <section>
             <h2>Вхід до особистого кабінету</h2>
-            <p>Введіть свої дані для входу в систему.</p>
-
+            <p>Увійдіть, щоб перевірити статус вашого проєкту або зв'язатися з менеджером.</p>
+            
             <form action="#" method="post">
-
                 <p>
-                    <label for="email">Електронна пошта:</label><br>
-                    <input type="email" id="email" name="email"
-                        placeholder="Введіть вашу email адресу" required>
+                    <label for="login-email">Електронна пошта:</label><br>
+                    <input type="email" id="login-email" name="email" required size="30">
                 </p>
-
                 <p>
-                    <label for="password">Пароль:</label><br>
-                    <input type="password" id="password" name="password"
-                        placeholder="Введіть ваш пароль" required>
+                    <label for="login-password">Пароль:</label><br>
+                    <input type="password" id="login-password" name="password" required size="30">
                 </p>
-
                 <p>
-                    <button type="submit">Увійти</button>
+                    <input type="checkbox" id="login-remember" name="remember_me">
+                    <label for="login-remember">Запам'ятати мене на цьому пристрої</label>
                 </p>
-
+                <p>
+                    <button type="submit">Увійти до кабінету</button>
+                </p>
             </form>
-
-            <p>Немає облікового запису? <a href="register.html">Зареєструватися</a></p>
+            
+            <ul>
+                <li><a href="#">Забули пароль? (Відновити доступ)</a></li>
+                <li>Немає акаунта? <a href="register.html">Пройти реєстрацію</a></li>
+            </ul>
         </section>
-
     </main>
 
     <footer>
-        <p>© 2024 DigitalBoost. Усі права захищені.</p>
-        <p>
-            Телефон: +38 (044) 123-45-67 |
-            Email: info@digitalboost.ua |
-            Адреса: м. Київ, вул. Хрещатик, 1
-        </p>
-        <p>
-            <a href="index.html">Головна</a> |
-            <a href="about.html">Про агентство</a> |
-            <a href="services.html">Послуги</a> |
-            <a href="contacts.html">Контакти</a>
-        </p>
+        <hr>
+        <p>&copy; 2024 AdsForYou. Захищене з'єднання.</p>
     </footer>
 
 </body>

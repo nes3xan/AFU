@@ -3,113 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Особистий кабінет - DigitalBoost</title>
+    <title>Мій кабінет – AdsForYou</title>
 </head>
 <body>
 
     <header>
-        <h1>DigitalBoost</h1>
-        <p>Рекламне агентство</p>
+        <h1>AdsForYou</h1>
+        <p>Особистий кабінет клієнта</p>
+        <hr>
     </header>
 
     <nav>
-        <a href="index.html">Головна</a> |
-        <a href="about.html">Про агентство</a> |
-        <a href="services.html">Послуги</a> |
-        <a href="contacts.html">Контакти</a> |
-        <a href="profile.html">Мій профіль</a> |
-        <a href="login.html">Вихід</a>
+        <ul>
+            <li><a href="index.html">На головну сайту</a></li>
+            <li><a href="profile.html">Мій профіль</a></li>
+            <li><a href="index.html">Вийти з системи</a></li>
+        </ul>
+        <hr>
     </nav>
 
     <main>
+        <h2>Вітаємо у вашому кабінеті!</h2>
+        <p>Тут ви можете керувати своїми даними та відстежувати співпрацю з нашим агентством.</p>
 
-        <h2>Особистий кабінет</h2>
-
+        <!-- Інформація про користувача та контактні дані -->
         <section>
-            <h3>Інформація про користувача</h3>
+            <h3>Ваші дані профілю</h3>
+            
+            <table border="1" cellpadding="8" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td><strong>Ім'я:</strong></td>
+                        <td>Андрій</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Прізвище:</strong></td>
+                        <td>Шевченко</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Email:</strong></td>
+                        <td>andriy.sh@example.com</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Контактний телефон:</strong></td>
+                        <td>+380 97 111 22 33</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Компанія/Бренд:</strong></td>
+                        <td>Кав'ярня "CoffeeTime"</td>
+                    </tr>
+                </tbody>
+            </table>
 
-            <article>
-                <p><strong>Ім'я:</strong> Іван</p>
-                <p><strong>Прізвище:</strong> Петренко</p>
-                <p><strong>Дата реєстрації:</strong> 15.03.2024</p>
-                <p><strong>Роль:</strong> Користувач</p>
-                <p><strong>Статус акаунту:</strong> Активний</p>
-            </article>
-        </section>
-
-        <section>
-            <h3>Контактні дані</h3>
-
-            <article>
-                <p><strong>Електронна пошта:</strong> ivan.petrenko@example.com</p>
-                <p><strong>Телефон:</strong> +38 (067) 111-22-33</p>
-                <p><strong>Місто:</strong> Київ</p>
-            </article>
-
-            <p><a href="#">Редагувати контактні дані</a></p>
-        </section>
-
-        <section>
-            <h3>Інформація про акаунт</h3>
-
-            <article>
-                <p><strong>Кількість замовлень:</strong> 3</p>
-                <p><strong>Активні послуги:</strong> SEO оптимізація, SMM просування</p>
-                <p><strong>Наступна оплата:</strong> 01.05.2024</p>
-                <p><strong>Останній вхід:</strong> 20.04.2024, 14:32</p>
-            </article>
-
-            <p>
-                <a href="#">Переглянути мої замовлення</a> |
-                <a href="services.html">Замовити нову послугу</a>
-            </p>
-        </section>
-
-        <section>
-            <h3>Змінити пароль</h3>
-
+            <br>
+            <!-- Форма редагування профілю (згідно Use Case) -->
             <form action="#" method="post">
+                <button type="submit">Редагувати профіль</button>
+                <button type="button">Змінити пароль</button>
+            </form>
+        </section>
 
-                <p>
-                    <label for="old-password">Поточний пароль:</label><br>
-                    <input type="password" id="old-password" name="old-password"
-                        placeholder="Введіть поточний пароль" required>
-                </p>
+        <hr>
 
-                <p>
-                    <label for="new-password">Новий пароль:</label><br>
-                    <input type="password" id="new-password" name="new-password"
-                        placeholder="Введіть новий пароль" required minlength="8">
-                </p>
+        <!-- Коротка інформація про акаунт та активні послуги -->
+        <section>
+            <h3>Інформація про акаунт та послуги</h3>
+            <p><strong>Дата реєстрації в системі:</strong> 15 жовтня 2023 року</p>
+            <p><strong>Статус акаунта:</strong> Активний клієнт</p>
+            <p><strong>Ваш персональний менеджер:</strong> Юлія (Telegram: @yulia_adsforyou)</p>
 
-                <p>
-                    <label for="confirm-new-password">Підтвердження нового пароля:</label><br>
-                    <input type="password" id="confirm-new-password" name="confirm-new-password"
-                        placeholder="Повторіть новий пароль" required minlength="8">
-                </p>
-
-                <p>
-                    <button type="submit">Змінити пароль</button>
-                </p>
-
+            <h4>Таблиця активних послуг</h4>
+            <table border="1" cellpadding="8" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Назва послуги</th>
+                        <th>Дата початку</th>
+                        <th>Статус</th>
+                        <th>Звітність</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Ведення Instagram (Комплекс)</td>
+                        <td>01.11.2023</td>
+                        <td>В процесі роботи</td>
+                        <td><a href="#">Завантажити звіт за листопад</a></td>
+                    </tr>
+                    <tr>
+                        <td>Таргетована реклама (TikTok)</td>
+                        <td>10.12.2023</td>
+                        <td>Активна кампанія</td>
+                        <td>Звіт очікується 10.01</td>
+                    </tr>
+                    <tr>
+                        <td>Розробка контент-плану</td>
+                        <td>15.10.2023</td>
+                        <td>Завершено</td>
+                        <td><a href="#">Завантажити PDF</a></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <br>
+            <form action="services.html" method="get">
+                <button type="submit">Замовити нову послугу</button>
             </form>
         </section>
 
     </main>
 
     <footer>
-        <p>© 2024 DigitalBoost. Усі права захищені.</p>
-        <p>
-            Телефон: +38 (044) 123-45-67 |
-            Email: info@digitalboost.ua |
-            Адреса: м. Київ, вул. Хрещатик, 1
-        </p>
-        <p>
-            <a href="index.html">Головна</a> |
-            <a href="about.html">Про агентство</a> |
-            <a href="services.html">Послуги</a> |
-            <a href="contacts.html">Контакти</a>
-        </p>
+        <hr>
+        <p>&copy; 2024 AdsForYou. Усі права захищені.</p>
     </footer>
 
 </body>
