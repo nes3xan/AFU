@@ -86,16 +86,46 @@
             </ul>
         </section>
 
+        <!-- ПОСЛУГИ: картки з кнопками «Дізнатися більше» -->
         <section>
             <h2>Популярні послуги</h2>
+
             <article>
-                <h3>Таргетована реклама</h3>
-                <p>Ефективне налаштування рекламних кампаній в Instagram та TikTok для залучення зацікавлених користувачів.</p>
+                <h3>Instagram реклама</h3>
+                <p>Ефективне налаштування рекламних кампаній в Instagram для залучення зацікавлених користувачів.</p>
+                <button class="btn-more" data-open-modal="instagram-ads">Дізнатися більше</button>
             </article>
+
+            <article>
+                <h3>TikTok реклама</h3>
+                <p>Запуск рекламних кампаній у TikTok Ads Manager з урахуванням специфіки молодої аудиторії.</p>
+                <button class="btn-more" data-open-modal="tiktok-ads">Дізнатися більше</button>
+            </article>
+
             <article>
                 <h3>Створення Reels</h3>
                 <p>Розробка сценаріїв, зйомка та монтаж динамічних коротких відео для органічного залучення аудиторії.</p>
+                <button class="btn-more" data-open-modal="reels">Дізнатися більше</button>
             </article>
+
+            <article>
+                <h3>Контент-плани</h3>
+                <p>Готові плани публікацій на місяць із темами, форматами та рекомендованими датами.</p>
+                <button class="btn-more" data-open-modal="content-plan">Дізнатися більше</button>
+            </article>
+
+            <article>
+                <h3>Дизайн постів</h3>
+                <p>Єдиний візуальний стиль для вашого профілю: шаблони, кольорова схема, типографіка.</p>
+                <button class="btn-more" data-open-modal="post-design">Дізнатися більше</button>
+            </article>
+
+            <article>
+                <h3>Ведення сторінок</h3>
+                <p>Повне ведення акаунту в Instagram або TikTok: публікації, коментарі, аналітика.</p>
+                <button class="btn-more" data-open-modal="smm">Дізнатися більше</button>
+            </article>
+
             <p>
                 Зацікавлені? <a href="services.html">Перегляньте повний перелік наших послуг</a>.
             </p>
@@ -121,5 +151,21 @@
         <p>&copy; 2024 Усі права захищені.</p>
     </footer>
 
+    <!-- МОДАЛЬНЕ ВІКНО -->
+    <div id="service-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-box">
+            <button id="modal-close" class="modal-close" aria-label="Закрити">&times;</button>
+            <h3 id="modal-title" class="modal-title"></h3>
+            <p id="modal-description" class="modal-description"></p>
+            <div class="modal-details">
+                <p><strong>Кому підходить:</strong></p>
+                <p id="modal-for-whom" class="modal-for-whom"></p>
+                <p><strong>Результат:</strong></p>
+                <p id="modal-result" class="modal-result"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
