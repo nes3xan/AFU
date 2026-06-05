@@ -5,6 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Реєстрація – AdsForYou</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ── Стилі для форм авторизації ── */
+        .form-error {
+            color: #b52a2a;
+            font-size: 0.82em;
+            margin-top: 3px;
+            display: none;
+        }
+        .form-error.visible {
+            display: block;
+        }
+        input.input-error {
+            outline: 2px solid #b52a2a;
+        }
+        .auth-message {
+            padding: 10px 14px;
+            border-radius: 5px;
+            font-size: 0.88em;
+            margin-bottom: 14px;
+            display: none;
+        }
+        .auth-message.success {
+            background: #d8f3dc;
+            color: #2d6a4f;
+            border: 1px solid #b7e4c7;
+            display: block;
+        }
+        .auth-message.error {
+            background: #fde8e8;
+            color: #b52a2a;
+            border: 1px solid #f5c6c6;
+            display: block;
+        }
+    </style>
 </head>
 <body id="page-register">
 
@@ -37,44 +71,46 @@
 
         <section>
             <h2>Форма реєстрації</h2>
-            <form action="#" method="post">
-                <fieldset>
-                    <legend>Персональні дані</legend>
-                    <p>
-                        <label for="reg-firstname">Ім'я:</label><br>
-                        <input type="text" id="reg-firstname" name="first_name" required size="30">
-                    </p>
-                    <p>
-                        <label for="reg-lastname">Прізвище:</label><br>
-                        <input type="text" id="reg-lastname" name="last_name" required size="30">
-                    </p>
-                </fieldset>
 
-                <fieldset>
-                    <legend>Дані для входу</legend>
-                    <p>
-                        <label for="reg-email">Електронна пошта (Email):</label><br>
-                        <input type="email" id="reg-email" name="email" required size="30">
-                    </p>
-                    <p>
-                        <label for="reg-password">Пароль (мінімум 8 символів):</label><br>
-                        <input type="password" id="reg-password" name="password" required size="30">
-                    </p>
-                    <p>
-                        <label for="reg-confirm-password">Підтвердження пароля:</label><br>
-                        <input type="password" id="reg-confirm-password" name="confirm_password" required size="30">
-                    </p>
-                </fieldset>
+            <div class="auth-message" id="register-message"></div>
 
+            <fieldset>
+                <legend>Персональні дані</legend>
                 <p>
-                    <input type="checkbox" id="reg-terms" name="terms" required>
-                    <label for="reg-terms">Я погоджуюсь на обробку моїх персональних даних згідно з політикою конфіденційності.</label>
+                    <label for="reg-firstname">Ім'я:</label><br>
+                    <input type="text" id="reg-firstname" name="first_name" size="30" autocomplete="given-name">
+                    <span class="form-error" id="err-firstname"></span>
                 </p>
-
                 <p>
-                    <button type="submit">Створити акаунт</button>
+                    <label for="reg-lastname">Прізвище:</label><br>
+                    <input type="text" id="reg-lastname" name="last_name" size="30" autocomplete="family-name">
+                    <span class="form-error" id="err-lastname"></span>
                 </p>
-            </form>
+            </fieldset>
+
+            <fieldset>
+                <legend>Дані для входу</legend>
+                <p>
+                    <label for="reg-email">Електронна пошта (Email):</label><br>
+                    <input type="email" id="reg-email" name="email" size="30" autocomplete="email">
+                    <span class="form-error" id="err-email"></span>
+                </p>
+                <p>
+                    <label for="reg-password">Пароль (мінімум 8 символів):</label><br>
+                    <input type="password" id="reg-password" name="password" size="30" autocomplete="new-password">
+                    <span class="form-error" id="err-password"></span>
+                </p>
+                <p>
+                    <label for="reg-confirm-password">Підтвердження пароля:</label><br>
+                    <input type="password" id="reg-confirm-password" name="confirm_password" size="30" autocomplete="new-password">
+                    <span class="form-error" id="err-confirm"></span>
+                </p>
+            </fieldset>
+
+            <p>
+                <button type="button" onclick="handleRegister()">Створити акаунт</button>
+            </p>
+
             <p>Вже є акаунт клієнта? <a href="login.html">Перейдіть до сторінки входу</a>.</p>
         </section>
     </main>
@@ -83,6 +119,171 @@
         <hr>
         <p>&copy; 2024 AdsForYou.</p>
     </footer>
+
+    <script>
+    // =============================================
+    //  AdsForYou — ЛР №4 — Реєстрація (register.html)
+    // =============================================
+
+    // Перевірка формату email
+    function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    // Показати помилку під полем
+    function showFieldError(inputId, errorId, message) {
+        var input = document.getElementById(inputId);
+        var err   = document.getElementById(errorId);
+        if (input) input.classList.add('input-error');
+        if (err)   { err.textContent = message; err.classList.add('visible'); }
+    }
+
+    // Прибрати помилку під полем
+    function clearFieldError(inputId, errorId) {
+        var input = document.getElementById(inputId);
+        var err   = document.getElementById(errorId);
+        if (input) input.classList.remove('input-error');
+        if (err)   { err.textContent = ''; err.classList.remove('visible'); }
+    }
+
+    // Скинути всі помилки
+    function clearAllErrors() {
+        var pairs = [
+            ['reg-firstname',        'err-firstname'],
+            ['reg-lastname',         'err-lastname'],
+            ['reg-email',            'err-email'],
+            ['reg-password',         'err-password'],
+            ['reg-confirm-password', 'err-confirm']
+        ];
+        pairs.forEach(function(p) { clearFieldError(p[0], p[1]); });
+        var msg = document.getElementById('register-message');
+        if (msg) msg.className = 'auth-message';
+    }
+
+    // Показати загальне повідомлення
+    function showMessage(id, text, type) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = text;
+        el.className   = 'auth-message ' + type;
+    }
+
+    // Отримати / зберегти список користувачів
+    function getUsers() {
+        var raw = localStorage.getItem('afu_users');
+        return raw ? JSON.parse(raw) : [];
+    }
+    function saveUsers(users) {
+        localStorage.setItem('afu_users', JSON.stringify(users));
+    }
+
+    // ── Обробка натискання «Створити акаунт» ──
+    function handleRegister() {
+        clearAllErrors();
+
+        var firstName = document.getElementById('reg-firstname').value.trim();
+        var lastName  = document.getElementById('reg-lastname').value.trim();
+        var email     = document.getElementById('reg-email').value.trim();
+        var password  = document.getElementById('reg-password').value;
+        var confirm   = document.getElementById('reg-confirm-password').value;
+        var valid     = true;
+
+        // Валідація: ім'я
+        if (!firstName) {
+            showFieldError('reg-firstname', 'err-firstname', 'Будь ласка, введіть ваше ім\'я.');
+            valid = false;
+        } else if (firstName.length < 2) {
+            showFieldError('reg-firstname', 'err-firstname', 'Ім\'я має містити мінімум 2 символи.');
+            valid = false;
+        }
+
+        // Валідація: прізвище
+        if (!lastName) {
+            showFieldError('reg-lastname', 'err-lastname', 'Будь ласка, введіть ваше прізвище.');
+            valid = false;
+        } else if (lastName.length < 2) {
+            showFieldError('reg-lastname', 'err-lastname', 'Прізвище має містити мінімум 2 символи.');
+            valid = false;
+        }
+
+        // Валідація: email
+        if (!email) {
+            showFieldError('reg-email', 'err-email', 'Будь ласка, введіть email.');
+            valid = false;
+        } else if (!isValidEmail(email)) {
+            showFieldError('reg-email', 'err-email', 'Введіть коректний email (наприклад: user@mail.com).');
+            valid = false;
+        }
+
+        // Валідація: пароль
+        if (!password) {
+            showFieldError('reg-password', 'err-password', 'Будь ласка, введіть пароль.');
+            valid = false;
+        } else if (password.length < 8) {
+            showFieldError('reg-password', 'err-password', 'Пароль має містити мінімум 8 символів.');
+            valid = false;
+        }
+
+        // Валідація: підтвердження пароля
+        if (!confirm) {
+            showFieldError('reg-confirm-password', 'err-confirm', 'Будь ласка, підтвердіть пароль.');
+            valid = false;
+        } else if (password && confirm !== password) {
+            showFieldError('reg-confirm-password', 'err-confirm', 'Паролі не збігаються.');
+            valid = false;
+        }
+
+        if (!valid) return;
+
+        // Перевірка дублю email
+        var users = getUsers();
+        var emailExists = users.some(function(u) { return u.email === email; });
+
+        if (emailExists) {
+            showFieldError('reg-email', 'err-email', 'Цей email вже зареєстрований. Спробуйте увійти.');
+            return;
+        }
+
+        // Збереження нового користувача
+        var newUser = {
+            firstName:    firstName,
+            lastName:     lastName,
+            email:        email,
+            password:     password,
+            registeredAt: new Date().toLocaleDateString('uk-UA')
+        };
+
+        users.push(newUser);
+        saveUsers(users);
+
+        // Очищення форми
+        document.getElementById('reg-firstname').value        = '';
+        document.getElementById('reg-lastname').value         = '';
+        document.getElementById('reg-email').value            = '';
+        document.getElementById('reg-password').value         = '';
+        document.getElementById('reg-confirm-password').value = '';
+
+        showMessage('register-message',
+            'Акаунт успішно створено! Переходимо до сторінки входу...', 'success');
+
+        setTimeout(function() {
+            window.location.href = 'login.html';
+        }, 1800);
+    }
+
+    // Очищення підсвітки при введенні
+    var fieldPairs = [
+        ['reg-firstname',        'err-firstname'],
+        ['reg-lastname',         'err-lastname'],
+        ['reg-email',            'err-email'],
+        ['reg-password',         'err-password'],
+        ['reg-confirm-password', 'err-confirm']
+    ];
+    fieldPairs.forEach(function(p) {
+        var el = document.getElementById(p[0]);
+        if (el) el.addEventListener('input', function() { clearFieldError(p[0], p[1]); });
+    });
+    </script>
 
 </body>
 </html>

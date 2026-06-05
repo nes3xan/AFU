@@ -18,102 +18,125 @@
         <ul>
             <li><a href="index.html">На головну сайту</a></li>
             <li><a href="profile.html">Мій профіль</a></li>
-            <li><a href="index.html">Вийти з системи</a></li>
+            <li><a href="#" onclick="handleLogout(); return false;">Вийти з системи</a></li>
         </ul>
         <hr>
     </nav>
 
-    <main>
-        <h2>Вітаємо у вашому кабінеті!</h2>
-        <p>Тут ви можете керувати своїми даними та відстежувати співпрацю з нашим агентством.</p>
-
-        <section>
-            <h3>Ваші дані профілю</h3>
-            
-            <table border="1" cellpadding="8" cellspacing="0">
-                <tbody>
-                    <tr>
-                        <td><strong>Ім'я:</strong></td>
-                        <td>Андрій</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Прізвище:</strong></td>
-                        <td>Шевченко</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Email:</strong></td>
-                        <td>andriy.sh@example.com</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Контактний телефон:</strong></td>
-                        <td>+380 97 111 22 33</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Компанія/Бренд:</strong></td>
-                        <td>Кав'ярня "CoffeeTime"</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <br>
-            <form action="#" method="post">
-                <button type="submit">Редагувати профіль</button>
-                <button type="button">Змінити пароль</button>
-            </form>
-        </section>
-
-        <hr>
-
-        <section>
-            <h3>Інформація про акаунт та послуги</h3>
-            <p><strong>Дата реєстрації в системі:</strong> 15 жовтня 2023 року</p>
-            <p><strong>Статус акаунта:</strong> Активний клієнт</p>
-            <p><strong>Ваш персональний менеджер:</strong> Юлія (Telegram: @yulia_adsforyou)</p>
-
-            <h4>Таблиця активних послуг</h4>
-            <table border="1" cellpadding="8" cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th>Назва послуги</th>
-                        <th>Дата початку</th>
-                        <th>Статус</th>
-                        <th>Звітність</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Ведення Instagram (Комплекс)</td>
-                        <td>01.11.2023</td>
-                        <td>В процесі роботи</td>
-                        <td><a href="#">Завантажити звіт за листопад</a></td>
-                    </tr>
-                    <tr>
-                        <td>Таргетована реклама (TikTok)</td>
-                        <td>10.12.2023</td>
-                        <td>Активна кампанія</td>
-                        <td>Звіт очікується 10.01</td>
-                    </tr>
-                    <tr>
-                        <td>Розробка контент-плану</td>
-                        <td>15.10.2023</td>
-                        <td>Завершено</td>
-                        <td><a href="#">Завантажити PDF</a></td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <br>
-            <form action="services.html" method="get">
-                <button type="submit">Замовити нову послугу</button>
-            </form>
-        </section>
-
+    <main id="profile-main">
+        <!-- Вміст підставляється скриптом залежно від стану авторизації -->
     </main>
 
     <footer>
         <hr>
         <p>&copy; 2024 AdsForYou. Усі права захищені.</p>
     </footer>
+
+    <script>
+    // =============================================
+    //  AdsForYou — ЛР №4 — Профіль (profile.html)
+    // =============================================
+
+    // Отримати поточного авторизованого користувача
+    function getCurrentUser() {
+        var raw = localStorage.getItem('afu_current_user');
+        return raw ? JSON.parse(raw) : null;
+    }
+
+    // Видалити сесію та повернутись на login
+    function handleLogout() {
+        localStorage.removeItem('afu_current_user');
+        window.location.href = 'login.html';
+    }
+
+    // ── Рендер сторінки ──
+    var main = document.getElementById('profile-main');
+    var user = getCurrentUser();
+
+    if (!user) {
+        // Користувач не авторизований — показуємо заглушку
+        main.innerHTML =
+            '<section>' +
+            '<h2>Доступ обмежено</h2>' +
+            '<p>Щоб переглянути особистий кабінет, спочатку необхідно увійти до системи.</p>' +
+            '<p><a href="login.html">Перейти до сторінки входу</a></p>' +
+            '</section>';
+    } else {
+        // Користувач авторизований — відображаємо його дані
+        main.innerHTML =
+            '<h2>Вітаємо у вашому кабінеті, ' + escapeHtml(user.firstName) + '!</h2>' +
+            '<p>Тут ви можете переглянути свої дані та відстежувати співпрацю з агентством.</p>' +
+
+            '<section>' +
+            '<h3>Ваші дані профілю</h3>' +
+            '<table border="1" cellpadding="8" cellspacing="0">' +
+            '<tbody>' +
+            '<tr><td><strong>Ім\'я:</strong></td><td>' + escapeHtml(user.firstName) + '</td></tr>' +
+            '<tr><td><strong>Прізвище:</strong></td><td>' + escapeHtml(user.lastName) + '</td></tr>' +
+            '<tr><td><strong>Email:</strong></td><td>' + escapeHtml(user.email) + '</td></tr>' +
+            '<tr><td><strong>Дата реєстрації:</strong></td><td>' + escapeHtml(user.registeredAt) + '</td></tr>' +
+            '<tr><td><strong>Статус акаунта:</strong></td><td>Активний клієнт</td></tr>' +
+            '</tbody>' +
+            '</table>' +
+            '<br>' +
+            '<button type="button" onclick="handleLogout()">Вийти з системи</button>' +
+            '</section>' +
+
+            '<hr>' +
+
+            '<section>' +
+            '<h3>Інформація про послуги</h3>' +
+            '<p><strong>Ваш персональний менеджер:</strong> Юлія (Telegram: @yulia_adsforyou)</p>' +
+
+            '<h4>Таблиця активних послуг</h4>' +
+            '<table border="1" cellpadding="8" cellspacing="0" width="100%">' +
+            '<thead>' +
+            '<tr>' +
+            '<th>Назва послуги</th>' +
+            '<th>Дата початку</th>' +
+            '<th>Статус</th>' +
+            '<th>Звітність</th>' +
+            '</tr>' +
+            '</thead>' +
+            '<tbody>' +
+            '<tr>' +
+            '<td>Ведення Instagram (Комплекс)</td>' +
+            '<td>01.11.2024</td>' +
+            '<td>В процесі роботи</td>' +
+            '<td><a href="#">Завантажити звіт</a></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td>Таргетована реклама (TikTok)</td>' +
+            '<td>10.12.2024</td>' +
+            '<td>Активна кампанія</td>' +
+            '<td>Звіт очікується</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td>Розробка контент-плану</td>' +
+            '<td>15.10.2024</td>' +
+            '<td>Завершено</td>' +
+            '<td><a href="#">Завантажити PDF</a></td>' +
+            '</tr>' +
+            '</tbody>' +
+            '</table>' +
+            '<br>' +
+            '<form action="services.html" method="get">' +
+            '<button type="submit">Замовити нову послугу</button>' +
+            '</form>' +
+            '</section>';
+    }
+
+    // Безпечне екранування HTML (захист від XSS)
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g,  '&amp;')
+            .replace(/</g,  '&lt;')
+            .replace(/>/g,  '&gt;')
+            .replace(/"/g,  '&quot;')
+            .replace(/'/g,  '&#39;');
+    }
+    </script>
 
 </body>
 </html>

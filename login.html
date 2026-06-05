@@ -5,6 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вхід – AdsForYou</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ── Стилі для форм авторизації ── */
+        .form-error {
+            color: #b52a2a;
+            font-size: 0.82em;
+            margin-top: 3px;
+            display: none;
+        }
+        .form-error.visible {
+            display: block;
+        }
+        input.input-error {
+            outline: 2px solid #b52a2a;
+        }
+        .auth-message {
+            padding: 10px 14px;
+            border-radius: 5px;
+            font-size: 0.88em;
+            margin-bottom: 14px;
+            display: none;
+        }
+        .auth-message.success {
+            background: #d8f3dc;
+            color: #2d6a4f;
+            border: 1px solid #b7e4c7;
+            display: block;
+        }
+        .auth-message.error {
+            background: #fde8e8;
+            color: #b52a2a;
+            border: 1px solid #f5c6c6;
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 0;
+        }
+    </style>
 </head>
 <body id="page-login">
 
@@ -29,27 +66,24 @@
         <section>
             <h2>Вхід до особистого кабінету</h2>
             <p>Увійдіть, щоб перевірити статус вашого проєкту або зв'язатися з менеджером.</p>
-            
-            <form action="#" method="post">
-                <p>
-                    <label for="login-email">Електронна пошта:</label><br>
-                    <input type="email" id="login-email" name="email" required size="30">
-                </p>
-                <p>
-                    <label for="login-password">Пароль:</label><br>
-                    <input type="password" id="login-password" name="password" required size="30">
-                </p>
-                <p>
-                    <input type="checkbox" id="login-remember" name="remember_me">
-                    <label for="login-remember">Запам'ятати мене на цьому пристрої</label>
-                </p>
-                <p>
-                    <button type="submit">Увійти до кабінету</button>
-                </p>
-            </form>
-            
+
+            <div class="auth-message" id="login-message"></div>
+
+            <p>
+                <label for="login-email">Електронна пошта:</label><br>
+                <input type="email" id="login-email" name="email" size="30" autocomplete="email">
+                <span class="form-error" id="err-email"></span>
+            </p>
+            <p>
+                <label for="login-password">Пароль:</label><br>
+                <input type="password" id="login-password" name="password" size="30" autocomplete="current-password">
+                <span class="form-error" id="err-password"></span>
+            </p>
+            <p>
+                <button type="button" onclick="handleLogin()">Увійти до кабінету</button>
+            </p>
+
             <ul>
-                <li><a href="#">Забули пароль? (Відновити доступ)</a></li>
                 <li>Немає акаунта? <a href="register.html">Пройти реєстрацію</a></li>
             </ul>
         </section>
@@ -59,6 +93,119 @@
         <hr>
         <p>&copy; 2024 AdsForYou. Захищене з'єднання.</p>
     </footer>
+
+    <script>
+    // =============================================
+    //  AdsForYou — ЛР №4 — Вхід (login.html)
+    // =============================================
+
+    // Перевірка формату email
+    function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    // Показати помилку під полем
+    function showFieldError(inputId, errorId, message) {
+        var input = document.getElementById(inputId);
+        var err   = document.getElementById(errorId);
+        if (input) input.classList.add('input-error');
+        if (err)   { err.textContent = message; err.classList.add('visible'); }
+    }
+
+    // Прибрати помилку під полем
+    function clearFieldError(inputId, errorId) {
+        var input = document.getElementById(inputId);
+        var err   = document.getElementById(errorId);
+        if (input) input.classList.remove('input-error');
+        if (err)   { err.textContent = ''; err.classList.remove('visible'); }
+    }
+
+    // Показати загальне повідомлення (success / error)
+    function showMessage(id, text, type) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = text;
+        el.className   = 'auth-message ' + type;
+    }
+
+    // Отримати список користувачів із localStorage
+    function getUsers() {
+        var raw = localStorage.getItem('afu_users');
+        return raw ? JSON.parse(raw) : [];
+    }
+
+    // Зберегти поточного авторизованого користувача
+    function saveCurrentUser(user) {
+        localStorage.setItem('afu_current_user', JSON.stringify(user));
+    }
+
+    // ── Обробка натискання «Увійти» ──
+    function handleLogin() {
+        // Скидаємо попередні помилки
+        clearFieldError('login-email',    'err-email');
+        clearFieldError('login-password', 'err-password');
+        var msgEl = document.getElementById('login-message');
+        if (msgEl) msgEl.className = 'auth-message';
+
+        var email    = document.getElementById('login-email').value.trim();
+        var password = document.getElementById('login-password').value;
+        var valid    = true;
+
+        // Валідація email
+        if (!email) {
+            showFieldError('login-email', 'err-email', 'Будь ласка, введіть email.');
+            valid = false;
+        } else if (!isValidEmail(email)) {
+            showFieldError('login-email', 'err-email', 'Введіть коректний email (наприклад: user@mail.com).');
+            valid = false;
+        }
+
+        // Валідація пароля
+        if (!password) {
+            showFieldError('login-password', 'err-password', 'Будь ласка, введіть пароль.');
+            valid = false;
+        }
+
+        if (!valid) return;
+
+        // Пошук користувача в localStorage
+        var users     = getUsers();
+        var foundUser = null;
+
+        for (var i = 0; i < users.length; i++) {
+            if (users[i].email === email && users[i].password === password) {
+                foundUser = users[i];
+                break;
+            }
+        }
+
+        if (!foundUser) {
+            showMessage('login-message', 'Неправильний email або пароль. Спробуйте ще раз.', 'error');
+            return;
+        }
+
+        // Успішний вхід — зберігаємо і переходимо
+        saveCurrentUser(foundUser);
+        showMessage('login-message', 'Вхід успішний! Переходимо до вашого кабінету...', 'success');
+
+        setTimeout(function() {
+            window.location.href = 'profile.html';
+        }, 1200);
+    }
+
+    // Очищення підсвітки при введенні
+    document.getElementById('login-email').addEventListener('input', function() {
+        clearFieldError('login-email', 'err-email');
+    });
+    document.getElementById('login-password').addEventListener('input', function() {
+        clearFieldError('login-password', 'err-password');
+    });
+
+    // Enter у полі пароля — спрацьовує кнопка входу
+    document.getElementById('login-password').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') handleLogin();
+    });
+    </script>
 
 </body>
 </html>
