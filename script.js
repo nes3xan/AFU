@@ -15,6 +15,45 @@ function getServices() {
     return defaults;
 }
 
+var servicesData = {
+    'instagram-ads': {
+        title: 'Instagram реклама',
+        description: 'Налаштовуємо таргетовану рекламу в Instagram, яка показується саме тим користувачам, яким цікавий ваш продукт.',
+        forWhom: 'Підходить для інтернет-магазинів, локального бізнесу, брендів одягу та краси, кафе та ресторанів.',
+        result: 'Збільшення охоплення цільової аудиторії та зростання переходів на сайт або профіль.'
+    },
+    'tiktok-ads': {
+        title: 'TikTok реклама',
+        description: 'Запускаємо рекламні кампанії в TikTok Ads Manager з урахуванням специфіки алгоритмів і поведінки аудиторії.',
+        forWhom: 'Підходить для брендів, які хочуть охопити молоду аудиторію від 16 до 35 років.',
+        result: 'Широке органічне охоплення та залучення нової аудиторії з мінімальними витратами.'
+    },
+    'reels': {
+        title: 'Створення Reels',
+        description: 'Розробляємо сценарії, організовуємо зйомку та монтаж коротких відео для Instagram та TikTok.',
+        forWhom: 'Підходить для всіх, хто хоче бути присутнім у відеоформаті без самостійного виробництва контенту.',
+        result: 'Готові Reels, які органічно поширюються та підвищують впізнаваність бренду.'
+    },
+    'content-plan': {
+        title: 'Контент-плани',
+        description: 'Складаємо детальні контент-плани на місяць: теми, формати, рубрики та рекомендовані дні для публікацій.',
+        forWhom: 'Підходить для тих, хто веде сторінку самостійно і хоче мати чітку структуру та стратегію.',
+        result: 'Систематична присутність у соцмережах без постійного «а що сьогодні публікувати?».'
+    },
+    'post-design': {
+        title: 'Дизайн постів',
+        description: 'Створюємо візуальне оформлення для постів у єдиному стилі: шаблони, кольорова палітра, типографіка.',
+        forWhom: 'Підходить для брендів, яким важлива естетика профілю та впізнаваний візуальний стиль.',
+        result: 'Акуратний та єдиний стиль сторінки, який справляє гарне перше враження.'
+    },
+    'smm': {
+        title: 'Ведення сторінок',
+        description: 'Беремо на себе повне ведення Instagram або TikTok: публікації, відповіді на коментарі, аналітика.',
+        forWhom: 'Підходить для власників бізнесу, яким немає часу займатися соцмережами самостійно.',
+        result: 'Активна та жива сторінка без особистих зусиль — ви займаєтесь бізнесом, ми займаємось соцмережами.'
+    }
+};
+
 var modal       = document.getElementById('service-modal');
 var modalTitle  = document.getElementById('modal-title');
 var modalDesc   = document.getElementById('modal-description');
@@ -23,19 +62,12 @@ var modalResult = document.getElementById('modal-result');
 var modalClose  = document.getElementById('modal-close');
 
 function openModal(serviceKey) {
-    var services = getServices();
-    var service = null;
-    for (var i = 0; i < services.length; i++) {
-        if (services[i].id === serviceKey) {
-            service = services[i];
-            break;
-        }
-    }
+    var service = servicesData[serviceKey];
     if (!service || !modal) return;
     modalTitle.textContent  = service.title;
     modalDesc.textContent   = service.description;
-    if (modalFor)    modalFor.textContent    = '';
-    if (modalResult) modalResult.textContent = service.price ? 'Ціна: ' + service.price : '';
+    modalFor.textContent    = service.forWhom;
+    modalResult.textContent = service.result;
     modal.classList.add('is-open');
     document.body.classList.add('modal-open');
 }
@@ -49,7 +81,7 @@ function closeModal() {
 document.querySelectorAll('[data-open-modal]').forEach(function(btn) {
     btn.addEventListener('click', function() {
         var key = btn.getAttribute('data-open-modal');
-        openModal(Number(key));
+        openModal(key);
     });
 });
 
