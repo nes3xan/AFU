@@ -6,7 +6,6 @@
     <title>Вхід – AdsForYou</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* ── Стилі для форм авторизації ── */
         .form-error {
             color: #b52a2a;
             font-size: 0.82em;
@@ -95,16 +94,10 @@
     </footer>
 
     <script>
-    // =============================================
-    //  AdsForYou — ЛР №4 — Вхід (login.html)
-    // =============================================
-
-    // Перевірка формату email
     function isValidEmail(email) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
-    // Показати помилку під полем
     function showFieldError(inputId, errorId, message) {
         var input = document.getElementById(inputId);
         var err   = document.getElementById(errorId);
@@ -112,7 +105,6 @@
         if (err)   { err.textContent = message; err.classList.add('visible'); }
     }
 
-    // Прибрати помилку під полем
     function clearFieldError(inputId, errorId) {
         var input = document.getElementById(inputId);
         var err   = document.getElementById(errorId);
@@ -120,7 +112,6 @@
         if (err)   { err.textContent = ''; err.classList.remove('visible'); }
     }
 
-    // Показати загальне повідомлення (success / error)
     function showMessage(id, text, type) {
         var el = document.getElementById(id);
         if (!el) return;
@@ -128,20 +119,16 @@
         el.className   = 'auth-message ' + type;
     }
 
-    // Отримати список користувачів із localStorage
     function getUsers() {
         var raw = localStorage.getItem('afu_users');
         return raw ? JSON.parse(raw) : [];
     }
 
-    // Зберегти поточного авторизованого користувача
     function saveCurrentUser(user) {
         localStorage.setItem('afu_current_user', JSON.stringify(user));
     }
 
-    // ── Обробка натискання «Увійти» ──
     function handleLogin() {
-        // Скидаємо попередні помилки
         clearFieldError('login-email',    'err-email');
         clearFieldError('login-password', 'err-password');
         var msgEl = document.getElementById('login-message');
@@ -151,7 +138,6 @@
         var password = document.getElementById('login-password').value;
         var valid    = true;
 
-        // Валідація email
         if (!email) {
             showFieldError('login-email', 'err-email', 'Будь ласка, введіть email.');
             valid = false;
@@ -160,7 +146,6 @@
             valid = false;
         }
 
-        // Валідація пароля
         if (!password) {
             showFieldError('login-password', 'err-password', 'Будь ласка, введіть пароль.');
             valid = false;
@@ -168,9 +153,6 @@
 
         if (!valid) return;
 
-        // ── Перевірка адміністратора ──
-        // Адміністратор визначається за фіксованими credentials,
-        // його немає у списку звичайних користувачів.
         if (email === 'admin@adsforyou.ua' && password === 'admin123') {
             var adminUser = {
                 firstName:    'Адміністратор',
@@ -187,7 +169,6 @@
             return;
         }
 
-        // Пошук користувача в localStorage
         var users     = getUsers();
         var foundUser = null;
 
@@ -203,16 +184,13 @@
             return;
         }
 
-        // Успішний вхід — зберігаємо і переходимо
         saveCurrentUser(foundUser);
         showMessage('login-message', 'Вхід успішний! Переходимо до вашого кабінету...', 'success');
-
         setTimeout(function() {
             window.location.href = 'profile.html';
         }, 1200);
     }
 
-    // Очищення підсвітки при введенні
     document.getElementById('login-email').addEventListener('input', function() {
         clearFieldError('login-email', 'err-email');
     });
@@ -220,7 +198,6 @@
         clearFieldError('login-password', 'err-password');
     });
 
-    // Enter у полі пароля — спрацьовує кнопка входу
     document.getElementById('login-password').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') handleLogin();
     });

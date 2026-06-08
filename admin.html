@@ -6,11 +6,6 @@
     <title>Адмін-панель – AdsForYou</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* =============================================
-           AdsForYou — ЛР №5 — Стилі адмін-панелі
-           ============================================= */
-
-        /* Форма додавання / редагування послуги */
         .svc-form {
             display: none;
             background: var(--bg-card);
@@ -81,8 +76,6 @@
             gap: 10px;
             margin-top: var(--sp-lg);
         }
-
-        /* Кнопки дій (небезпека / скасування) */
         .btn-delete {
             background: #DC2626;
             color: var(--white);
@@ -114,8 +107,6 @@
         .btn-cancel:hover {
             background: #475569;
         }
-
-        /* Сповіщення після дії (success / error) */
         .admin-notice {
             padding: 10px var(--sp-md);
             border-radius: var(--radius-sm);
@@ -135,8 +126,6 @@
             border: 1px solid #F5C6C6;
             display: block;
         }
-
-        /* Мітка CRUD */
         .badge-crud {
             display: inline-block;
             background: var(--accent-soft);
@@ -150,40 +139,56 @@
             vertical-align: middle;
             margin-left: var(--sp-sm);
         }
-
-        /* Таблиця послуг */
         .svc-table td {
             vertical-align: top;
         }
         .svc-table td:last-child {
             white-space: nowrap;
         }
-
-        /* Блок «Доступ заборонено» */
         .access-denied {
             padding: 30px 0;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .status-active {
+            background: #D8F3DC;
+            color: #2D6A4F;
+        }
+        .status-pending {
+            background: #FEF9C3;
+            color: #854D0E;
+        }
+        .status-new {
+            background: var(--accent-soft);
+            color: var(--accent);
         }
     </style>
 </head>
 <body id="page-admin">
 
     <header>
-        <h1>AdsForYou</h1>
-        <p>Панель адміністратора.</p>
+        <h1>AdsForYou: Панель керування (CRM)</h1>
+        <p>Робочий простір адміністратора.</p>
         <hr>
     </header>
 
     <nav>
         <ul>
-            <li><a href="index.html">Головний сайт</a></li>
-            <li><a href="profile.html">Мій кабінет</a></li>
-            <li><a href="#" onclick="doLogout(); return false;">Вийти з системи</a></li>
+            <li><a href="admin.html">Дашборд</a></li>
+            <li><a href="admin.html">Користувачі</a></li>
+            <li><a href="admin.html">Управління послугами</a></li>
+            <li><a href="index.html">Перейти на сайт</a></li>
+            <li><a href="#" onclick="doLogout(); return false;">Вийти (Logout)</a></li>
         </ul>
         <hr>
     </nav>
 
     <main id="admin-main">
-        <!-- Вміст підставляється скриптом залежно від ролі користувача -->
     </main>
 
     <footer>
@@ -192,36 +197,22 @@
     </footer>
 
     <script>
-    // =============================================
-    //  AdsForYou — ЛР №5 — Адмін-панель (admin.html)
-    //  Реалізація CRUD для послуг агентства
-    // =============================================
+    var SERVICES_KEY = 'afu_services';
 
-    var ADMIN_EMAIL  = 'admin@adsforyou.ua';   // Єдиний адміністратор системи
-    var SERVICES_KEY = 'afu_services';          // Ключ у localStorage
+    var mainEl     = document.getElementById('admin-main');
+    var formState  = null;
+    var pendingMsg = null;
 
-    var mainEl      = document.getElementById('admin-main');
-    var formState   = null;   // null | 'add' | <number> (id послуги для редагування)
-    var pendingMsg  = null;   // Об'єкт { text, type } — сповіщення після ре-рендеру
-
-
-    // ──────────────────────────────────────────
-    //  1. ДОПОМІЖНІ ФУНКЦІЇ
-    // ──────────────────────────────────────────
-
-    // Отримати поточного авторизованого користувача
     function getCurrentUser() {
         var raw = localStorage.getItem('afu_current_user');
         return raw ? JSON.parse(raw) : null;
     }
 
-    // Вийти з системи та перейти на сторінку входу
     function doLogout() {
         localStorage.removeItem('afu_current_user');
         window.location.href = 'login.html';
     }
 
-    // Безпечне екранування HTML (захист від XSS)
     function escapeHtml(str) {
         if (!str) return '';
         return String(str)
@@ -232,15 +223,9 @@
             .replace(/'/g,  '&#39;');
     }
 
-
-    // ──────────────────────────────────────────
-    //  2. ПЕРЕВІРКА ДОСТУПУ
-    // ──────────────────────────────────────────
-
     var currentUser = getCurrentUser();
 
     if (!currentUser || currentUser.role !== 'admin') {
-        // Доступ заборонено — показуємо повідомлення та редіректимо
         mainEl.innerHTML =
             '<section class="access-denied">' +
             '<h2>Доступ заборонено</h2>' +
@@ -248,85 +233,42 @@
             '<p>Будь ласка, увійдіть як адміністратор.</p>' +
             '<p>Переадресація на сторінку входу...</p>' +
             '</section>';
-
         setTimeout(function() {
             window.location.href = 'login.html';
         }, 2500);
-
     } else {
-        // Доступ дозволено — ініціалізуємо панель
         initPanel();
     }
 
-
-    // ──────────────────────────────────────────
-    //  3. РОБОТА З ПОСЛУГАМИ (localStorage)
-    // ──────────────────────────────────────────
-
-    // Отримати список послуг із localStorage
     function getServices() {
         var raw = localStorage.getItem(SERVICES_KEY);
         if (raw) return JSON.parse(raw);
-
-        // Якщо localStorage порожній — завантажуємо початкові дефолтні послуги
         var defaults = [
-            {
-                id: 1,
-                title: 'Instagram реклама',
-                description: 'Налаштування таргетованих рекламних кампаній в Instagram з детальним підбором аудиторії та цілей просування.',
-                price: '5 000 грн'
-            },
-            {
-                id: 2,
-                title: 'TikTok реклама',
-                description: 'Запуск рекламних кампаній у TikTok Ads Manager з урахуванням алгоритмів платформи та поведінки аудиторії.',
-                price: '4 500 грн'
-            },
-            {
-                id: 3,
-                title: 'Створення Reels',
-                description: 'Розробка сценарію, організація зйомки та монтаж коротких відео для Instagram та TikTok.',
-                price: '3 000 грн'
-            },
-            {
-                id: 4,
-                title: 'Контент-план',
-                description: 'Детальний контент-план на місяць: теми, формати, рубрики та рекомендовані дні для публікацій.',
-                price: '1 500 грн'
-            },
-            {
-                id: 5,
-                title: 'Дизайн постів',
-                description: 'Створення візуального оформлення постів у єдиному стилі бренду: шаблони, кольорова палітра, типографіка.',
-                price: '2 000 грн'
-            },
-            {
-                id: 6,
-                title: 'Ведення сторінок',
-                description: 'Повне ведення Instagram або TikTok: публікації, відповіді на коментарі, щомісячна аналітика.',
-                price: '8 000 грн'
-            }
+            { id: 1, title: 'Instagram реклама', description: 'Налаштування таргетованих рекламних кампаній в Instagram з детальним підбором аудиторії та цілей просування.', price: '5 000 грн' },
+            { id: 2, title: 'TikTok реклама', description: 'Запуск рекламних кампаній у TikTok Ads Manager з урахуванням алгоритмів платформи та поведінки аудиторії.', price: '4 500 грн' },
+            { id: 3, title: 'Створення Reels', description: 'Розробка сценарію, організація зйомки та монтаж коротких відео для Instagram та TikTok.', price: '3 000 грн' },
+            { id: 4, title: 'Контент-план', description: 'Детальний контент-план на місяць: теми, формати, рубрики та рекомендовані дні для публікацій.', price: '1 500 грн' },
+            { id: 5, title: 'Дизайн постів', description: 'Створення візуального оформлення постів у єдиному стилі бренду: шаблони, кольорова палітра, типографіка.', price: '2 000 грн' },
+            { id: 6, title: 'Ведення сторінок', description: 'Повне ведення Instagram або TikTok: публікації, відповіді на коментарі, щомісячна аналітика.', price: '8 000 грн' }
         ];
         saveServices(defaults);
         return defaults;
     }
 
-    // Зберегти список послуг у localStorage
     function saveServices(list) {
         localStorage.setItem(SERVICES_KEY, JSON.stringify(list));
     }
 
-    // Генерація наступного унікального ID
     function nextId(list) {
         if (!list || !list.length) return 1;
         var ids = list.map(function(s) { return s.id; });
         return Math.max.apply(null, ids) + 1;
     }
 
-
-    // ──────────────────────────────────────────
-    //  4. РЕНДЕР ПАНЕЛІ (READ)
-    // ──────────────────────────────────────────
+    function getUsers() {
+        var raw = localStorage.getItem('afu_users');
+        return raw ? JSON.parse(raw) : [];
+    }
 
     function initPanel() {
         renderPanel();
@@ -334,9 +276,9 @@
 
     function renderPanel() {
         var services   = getServices();
+        var users      = getUsers();
         var formIsOpen = (formState !== null);
 
-        // Знайти послугу для редагування (якщо formState є числом)
         var editSvc = null;
         if (typeof formState === 'number') {
             for (var i = 0; i < services.length; i++) {
@@ -349,72 +291,100 @@
 
         var formHeading = (editSvc) ? 'Редагування послуги' : 'Нова послуга';
 
-        // ── Заголовок секції ──
+        var now = new Date();
+        var timeStr = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+
         var html =
-            '<h2>Керування послугами' +
+            '<section>' +
+            '<h2>Огляд системи</h2>' +
+            '<article>' +
+            '<p><strong>Адміністратор:</strong> ' + escapeHtml(currentUser.firstName) + ' (Головний менеджер)</p>' +
+            '<p><strong>Останній вхід:</strong> Сьогодні о ' + timeStr + '</p>' +
+            '<p><strong>Сповіщення системи:</strong> Зареєстрованих користувачів у системі: ' + users.length + '.</p>' +
+            '</article>' +
+            '</section>' +
+
+            '<section>' +
+            '<h2>Керування базою клієнтів (Користувачі)</h2>' +
+            '<p>Список зареєстрованих користувачів у системі:</p>';
+
+        if (users.length === 0) {
+            html += '<p>Зареєстрованих користувачів поки немає.</p>';
+        } else {
+            html +=
+                '<table border="1" cellpadding="8" cellspacing="0" width="100%">' +
+                '<thead><tr>' +
+                '<th>ID</th>' +
+                '<th>ПІБ Клієнта</th>' +
+                '<th>Email</th>' +
+                '<th>Дата реєстрації</th>' +
+                '<th>Дії</th>' +
+                '</tr></thead>' +
+                '<tbody>';
+
+            for (var u = 0; u < users.length; u++) {
+                var usr = users[u];
+                html +=
+                    '<tr>' +
+                    '<td>' + (1000 + u + 1) + '</td>' +
+                    '<td>' + escapeHtml(usr.firstName) + ' ' + escapeHtml(usr.lastName) + '</td>' +
+                    '<td>' + escapeHtml(usr.email) + '</td>' +
+                    '<td>' + escapeHtml(usr.registeredAt || '—') + '</td>' +
+                    '<td>' +
+                    '<button type="button" onclick="deleteUser(' + u + ')">Видалити</button>' +
+                    '</td>' +
+                    '</tr>';
+            }
+
+            html += '</tbody></table>';
+        }
+
+        html += '</section>' +
+
+            '<section>' +
+            '<h2>Керування каталогом послуг' +
             '<span class="badge-crud">CRUD</span>' +
             '</h2>' +
             '<p>Перегляд, додавання, редагування та видалення послуг агентства.</p>' +
-
-            // Блок для сповіщень (показується після дії)
             '<div id="admin-notice" class="admin-notice"></div>' +
 
-            '<section>' +
-            '<p>' +
-            '<button type="button" onclick="openAddForm()">+ Додати нову послугу</button>' +
-            '</p>' +
+            '<p><button type="button" onclick="openAddForm()">+ Додати нову послугу</button></p>' +
 
-            // ── Форма CREATE / UPDATE ──
             '<div id="svc-form" class="svc-form' + (formIsOpen ? ' open' : '') + '">' +
             '<h3>' + formHeading + '</h3>' +
-
             '<div class="svc-field">' +
             '<label for="f-title">Назва послуги:</label>' +
             '<input type="text" id="f-title" placeholder="Наприклад: Instagram реклама">' +
             '<span class="field-err" id="e-title"></span>' +
             '</div>' +
-
             '<div class="svc-field">' +
             '<label for="f-desc">Опис послуги:</label>' +
             '<textarea id="f-desc" placeholder="Коротко опишіть послугу..."></textarea>' +
             '<span class="field-err" id="e-desc"></span>' +
             '</div>' +
-
             '<div class="svc-field">' +
             '<label for="f-price">Ціна:</label>' +
             '<input type="text" id="f-price" placeholder="Наприклад: 5 000 грн">' +
             '<span class="field-err" id="e-price"></span>' +
             '</div>' +
-
             '<div class="form-actions">' +
             '<button type="button" onclick="saveService()">Зберегти</button>' +
             '<button type="button" class="btn-cancel" onclick="closeForm()">Скасувати</button>' +
             '</div>' +
-            '</div>' + // end svc-form
-            '</section>' +
+            '</div>' +
 
-            // ── Таблиця послуг (READ) ──
-            '<section>' +
-            '<h3>Список послуг (' + services.length + ')</h3>';
+            '<table border="1" cellpadding="8" cellspacing="0" width="100%" class="svc-table">' +
+            '<thead><tr>' +
+            '<th>Назва</th>' +
+            '<th>Опис</th>' +
+            '<th>Ціна</th>' +
+            '<th>Дії</th>' +
+            '</tr></thead>' +
+            '<tbody>';
 
         if (services.length === 0) {
-            html +=
-                '<p>Послуг поки немає. ' +
-                'Скористайтеся кнопкою «+ Додати нову послугу» вище.</p>';
+            html += '<tr><td colspan="4">Послуг поки немає. Додайте першу послугу кнопкою вище.</td></tr>';
         } else {
-            html +=
-                '<table border="1" cellpadding="8" cellspacing="0" ' +
-                'width="100%" class="svc-table">' +
-                '<thead>' +
-                '<tr>' +
-                '<th>Назва</th>' +
-                '<th>Опис</th>' +
-                '<th>Ціна</th>' +
-                '<th>Дії</th>' +
-                '</tr>' +
-                '</thead>' +
-                '<tbody>';
-
             for (var j = 0; j < services.length; j++) {
                 var s = services[j];
                 html +=
@@ -423,95 +393,80 @@
                     '<td>' + escapeHtml(s.description) + '</td>' +
                     '<td>' + escapeHtml(s.price) + '</td>' +
                     '<td>' +
-                    '<button type="button" onclick="openEditForm(' + s.id + ')">' +
-                    'Редагувати' +
-                    '</button>' +
-                    '<button type="button" class="btn-delete" ' +
-                    'onclick="deleteService(' + s.id + ')">' +
-                    'Видалити' +
-                    '</button>' +
+                    '<button type="button" onclick="openEditForm(' + s.id + ')">Редагувати</button>' +
+                    '<button type="button" class="btn-delete" onclick="deleteService(' + s.id + ')">Видалити</button>' +
                     '</td>' +
                     '</tr>';
             }
-
-            html += '</tbody></table>';
         }
 
-        html += '</section>';
+        html += '</tbody></table></section>';
 
-        // Вставляємо HTML
         mainEl.innerHTML = html;
 
-        // Якщо форма відкрита — встановлюємо значення полів програмно
-        // (щоб уникнути проблем з HTML-екрануванням в атрибутах)
         if (editSvc) {
             document.getElementById('f-title').value = editSvc.title;
             document.getElementById('f-desc').value  = editSvc.description;
             document.getElementById('f-price').value = editSvc.price;
         }
 
-        // Прокрутити до форми, якщо вона відкрита
         if (formIsOpen) {
             var formEl = document.getElementById('svc-form');
-            if (formEl) {
-                formEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+            if (formEl) formEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // Показати очікуюче сповіщення (якщо є)
         if (pendingMsg) {
             var noticeEl = document.getElementById('admin-notice');
             if (noticeEl) {
                 noticeEl.textContent = pendingMsg.text;
                 noticeEl.className   = 'admin-notice ' + pendingMsg.type;
                 var elRef = noticeEl;
-                setTimeout(function() {
-                    elRef.className = 'admin-notice';
-                }, 3500);
+                setTimeout(function() { elRef.className = 'admin-notice'; }, 3500);
             }
             pendingMsg = null;
         }
     }
 
+    function deleteUser(index) {
+        var users = getUsers();
+        if (!users[index]) return;
+        var confirmed = confirm(
+            'Видалити користувача ' + users[index].firstName + ' ' + users[index].lastName + '?\n' +
+            'Цю дію буде виконано безповоротно.'
+        );
+        if (!confirmed) return;
+        users.splice(index, 1);
+        localStorage.setItem('afu_users', JSON.stringify(users));
+        pendingMsg = { text: 'Користувача успішно видалено.', type: 'success' };
+        renderPanel();
+    }
 
-    // ──────────────────────────────────────────
-    //  5. УПРАВЛІННЯ ФОРМОЮ
-    // ──────────────────────────────────────────
-
-    // Відкрити форму для додавання нової послуги (CREATE)
     function openAddForm() {
         formState = 'add';
         renderPanel();
     }
 
-    // Відкрити форму для редагування існуючої послуги (UPDATE)
     function openEditForm(id) {
         formState = id;
         renderPanel();
     }
 
-    // Закрити форму без збереження
     function closeForm() {
         formState = null;
         renderPanel();
     }
 
-    // Скинути підсвітку помилок у полях форми
     function clearFormErrors() {
-        var fields = ['f-title', 'f-desc', 'f-price'];
-        var errors = ['e-title', 'e-desc', 'e-price'];
-
-        fields.forEach(function(id) {
+        ['f-title', 'f-desc', 'f-price'].forEach(function(id) {
             var el = document.getElementById(id);
             if (el) el.classList.remove('field-error');
         });
-        errors.forEach(function(id) {
+        ['e-title', 'e-desc', 'e-price'].forEach(function(id) {
             var el = document.getElementById(id);
             if (el) { el.textContent = ''; el.classList.remove('visible'); }
         });
     }
 
-    // Показати помилку під конкретним полем
     function showFieldError(fieldId, errId, message) {
         var field = document.getElementById(fieldId);
         var err   = document.getElementById(errId);
@@ -519,20 +474,13 @@
         if (err)   { err.textContent = message; err.classList.add('visible'); }
     }
 
-
-    // ──────────────────────────────────────────
-    //  6. CRUD: ЗБЕРЕЖЕННЯ (CREATE / UPDATE)
-    // ──────────────────────────────────────────
-
     function saveService() {
         clearFormErrors();
-
         var title = document.getElementById('f-title').value.trim();
         var desc  = document.getElementById('f-desc').value.trim();
         var price = document.getElementById('f-price').value.trim();
         var valid = true;
 
-        // ── Валідація полів ──
         if (!title) {
             showFieldError('f-title', 'e-title', 'Будь ласка, введіть назву послуги.');
             valid = false;
@@ -540,36 +488,24 @@
             showFieldError('f-title', 'e-title', 'Назва повинна містити мінімум 3 символи.');
             valid = false;
         }
-
         if (!desc) {
             showFieldError('f-desc', 'e-desc', 'Будь ласка, введіть опис послуги.');
             valid = false;
         }
-
         if (!price) {
             showFieldError('f-price', 'e-price', 'Будь ласка, введіть ціну послуги.');
             valid = false;
         }
-
-        if (!valid) return; // Зупиняємо, якщо є помилки
+        if (!valid) return;
 
         var services = getServices();
         var message  = '';
 
         if (formState === 'add') {
-            // ── CREATE: додаємо нову послугу ──
-            var newService = {
-                id:          nextId(services),
-                title:       title,
-                description: desc,
-                price:       price
-            };
-            services.push(newService);
+            services.push({ id: nextId(services), title: title, description: desc, price: price });
             saveServices(services);
             message = 'Послугу "' + title + '" успішно додано до каталогу.';
-
         } else {
-            // ── UPDATE: оновлюємо існуючу послугу ──
             for (var i = 0; i < services.length; i++) {
                 if (services[i].id === formState) {
                     services[i].title       = title;
@@ -582,52 +518,30 @@
             message = 'Послугу "' + title + '" успішно оновлено.';
         }
 
-        // Закриваємо форму та показуємо сповіщення
         formState  = null;
         pendingMsg = { text: message, type: 'success' };
         renderPanel();
     }
 
-
-    // ──────────────────────────────────────────
-    //  7. CRUD: ВИДАЛЕННЯ (DELETE)
-    // ──────────────────────────────────────────
-
     function deleteService(id) {
         var services = getServices();
         var target   = null;
-
         for (var i = 0; i < services.length; i++) {
-            if (services[i].id === id) {
-                target = services[i];
-                break;
-            }
+            if (services[i].id === id) { target = services[i]; break; }
         }
         if (!target) return;
 
-        // Підтвердження видалення
         var confirmed = confirm(
             'Видалити послугу "' + target.title + '"?\n' +
             'Цю дію буде виконано безповоротно.'
         );
         if (!confirmed) return;
 
-        // ── DELETE: видаляємо послугу зі списку ──
-        var updated = services.filter(function(s) { return s.id !== id; });
-        saveServices(updated);
-
-        // Якщо форма була відкрита для цієї послуги — закриваємо
-        if (formState === id) {
-            formState = null;
-        }
-
-        pendingMsg = {
-            text: 'Послугу "' + target.title + '" видалено з каталогу.',
-            type: 'success'
-        };
+        saveServices(services.filter(function(s) { return s.id !== id; }));
+        if (formState === id) formState = null;
+        pendingMsg = { text: 'Послугу "' + target.title + '" видалено з каталогу.', type: 'success' };
         renderPanel();
     }
-
     </script>
 
 </body>
