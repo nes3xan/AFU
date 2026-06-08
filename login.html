@@ -168,6 +168,25 @@
 
         if (!valid) return;
 
+        // ── Перевірка адміністратора ──
+        // Адміністратор визначається за фіксованими credentials,
+        // його немає у списку звичайних користувачів.
+        if (email === 'admin@adsforyou.ua' && password === 'admin123') {
+            var adminUser = {
+                firstName:    'Адміністратор',
+                lastName:     '',
+                email:        'admin@adsforyou.ua',
+                role:         'admin',
+                registeredAt: 'Системний акаунт'
+            };
+            saveCurrentUser(adminUser);
+            showMessage('login-message', 'Вхід успішний! Переходимо до вашого кабінету...', 'success');
+            setTimeout(function() {
+                window.location.href = 'profile.html';
+            }, 1200);
+            return;
+        }
+
         // Пошук користувача в localStorage
         var users     = getUsers();
         var foundUser = null;

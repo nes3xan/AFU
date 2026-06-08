@@ -61,22 +61,101 @@
             '<p>Щоб переглянути особистий кабінет, спочатку необхідно увійти до системи.</p>' +
             '<p><a href="login.html">Перейти до сторінки входу</a></p>' +
             '</section>';
+
     } else {
-        // Користувач авторизований — відображаємо його дані
+
+        // ── Визначаємо роль ──
+        var isAdmin = (user.role === 'admin');
+
+        // ── Рядки таблиці профілю ──
+        var profileRows = '';
+        if (!isAdmin) {
+            profileRows +=
+                '<tr><td><strong>Ім\'я:</strong></td><td>' + escapeHtml(user.firstName) + '</td></tr>' +
+                '<tr><td><strong>Прізвище:</strong></td><td>' + escapeHtml(user.lastName) + '</td></tr>';
+        }
+        profileRows +=
+            '<tr><td><strong>Email:</strong></td><td>' + escapeHtml(user.email) + '</td></tr>' +
+            '<tr><td><strong>Дата реєстрації:</strong></td><td>' + escapeHtml(user.registeredAt) + '</td></tr>' +
+            '<tr><td><strong>Статус акаунта:</strong></td><td>' +
+                (isAdmin ? '<strong>Адміністратор</strong>' : 'Активний клієнт') +
+            '</td></tr>';
+
+        // ── Другий блок: для адміна — кнопка панелі; для клієнта — послуги ──
+        var secondSection = '';
+
+        if (isAdmin) {
+            // Блок для адміністратора
+            secondSection =
+                '<section>' +
+                '<h3>Панель адміністратора</h3>' +
+                '<p>Ви увійшли до системи як адміністратор. ' +
+                'Вам доступна панель керування послугами агентства.</p>' +
+                '<p>' +
+                '<a href="admin.html">' +
+                '<button type="button">Відкрити адмін-панель</button>' +
+                '</a>' +
+                '</p>' +
+                '</section>';
+        } else {
+            // Блок для звичайного клієнта (без змін від ЛР4)
+            secondSection =
+                '<section>' +
+                '<h3>Інформація про послуги</h3>' +
+                '<p><strong>Ваш персональний менеджер:</strong> Юлія (Telegram: @yulia_adsforyou)</p>' +
+
+                '<h4>Таблиця активних послуг</h4>' +
+                '<table border="1" cellpadding="8" cellspacing="0" width="100%">' +
+                '<thead>' +
+                '<tr>' +
+                '<th>Назва послуги</th>' +
+                '<th>Дата початку</th>' +
+                '<th>Статус</th>' +
+                '<th>Звітність</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>' +
+                '<tr>' +
+                '<td>Ведення Instagram (Комплекс)</td>' +
+                '<td>01.11.2024</td>' +
+                '<td>В процесі роботи</td>' +
+                '<td><a href="#">Завантажити звіт</a></td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td>Таргетована реклама (TikTok)</td>' +
+                '<td>10.12.2024</td>' +
+                '<td>Активна кампанія</td>' +
+                '<td>Звіт очікується</td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td>Розробка контент-плану</td>' +
+                '<td>15.10.2024</td>' +
+                '<td>Завершено</td>' +
+                '<td><a href="#">Завантажити PDF</a></td>' +
+                '</tr>' +
+                '</tbody>' +
+                '</table>' +
+                '<br>' +
+                '<form action="services.html" method="get">' +
+                '<button type="submit">Замовити нову послугу</button>' +
+                '</form>' +
+                '</section>';
+        }
+
+        // ── Складаємо підсумковий HTML ──
         main.innerHTML =
-            '<h2>Вітаємо у вашому кабінеті, ' + escapeHtml(user.firstName) + '!</h2>' +
-            '<p>Тут ви можете переглянути свої дані та відстежувати співпрацю з агентством.</p>' +
+            '<h2>Вітаємо у вашому кабінеті, ' +
+                (isAdmin ? 'Адміністратор' : escapeHtml(user.firstName)) +
+            '!</h2>' +
+            (isAdmin
+                ? '<p>Ви увійшли до системи як адміністратор агентства AdsForYou.</p>'
+                : '<p>Тут ви можете переглянути свої дані та відстежувати співпрацю з агентством.</p>'
+            ) +
 
             '<section>' +
             '<h3>Ваші дані профілю</h3>' +
             '<table border="1" cellpadding="8" cellspacing="0">' +
-            '<tbody>' +
-            '<tr><td><strong>Ім\'я:</strong></td><td>' + escapeHtml(user.firstName) + '</td></tr>' +
-            '<tr><td><strong>Прізвище:</strong></td><td>' + escapeHtml(user.lastName) + '</td></tr>' +
-            '<tr><td><strong>Email:</strong></td><td>' + escapeHtml(user.email) + '</td></tr>' +
-            '<tr><td><strong>Дата реєстрації:</strong></td><td>' + escapeHtml(user.registeredAt) + '</td></tr>' +
-            '<tr><td><strong>Статус акаунта:</strong></td><td>Активний клієнт</td></tr>' +
-            '</tbody>' +
+            '<tbody>' + profileRows + '</tbody>' +
             '</table>' +
             '<br>' +
             '<button type="button" onclick="handleLogout()">Вийти з системи</button>' +
@@ -84,46 +163,7 @@
 
             '<hr>' +
 
-            '<section>' +
-            '<h3>Інформація про послуги</h3>' +
-            '<p><strong>Ваш персональний менеджер:</strong> Юлія (Telegram: @yulia_adsforyou)</p>' +
-
-            '<h4>Таблиця активних послуг</h4>' +
-            '<table border="1" cellpadding="8" cellspacing="0" width="100%">' +
-            '<thead>' +
-            '<tr>' +
-            '<th>Назва послуги</th>' +
-            '<th>Дата початку</th>' +
-            '<th>Статус</th>' +
-            '<th>Звітність</th>' +
-            '</tr>' +
-            '</thead>' +
-            '<tbody>' +
-            '<tr>' +
-            '<td>Ведення Instagram (Комплекс)</td>' +
-            '<td>01.11.2024</td>' +
-            '<td>В процесі роботи</td>' +
-            '<td><a href="#">Завантажити звіт</a></td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td>Таргетована реклама (TikTok)</td>' +
-            '<td>10.12.2024</td>' +
-            '<td>Активна кампанія</td>' +
-            '<td>Звіт очікується</td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td>Розробка контент-плану</td>' +
-            '<td>15.10.2024</td>' +
-            '<td>Завершено</td>' +
-            '<td><a href="#">Завантажити PDF</a></td>' +
-            '</tr>' +
-            '</tbody>' +
-            '</table>' +
-            '<br>' +
-            '<form action="services.html" method="get">' +
-            '<button type="submit">Замовити нову послугу</button>' +
-            '</form>' +
-            '</section>';
+            secondSection;
     }
 
     // Безпечне екранування HTML (захист від XSS)

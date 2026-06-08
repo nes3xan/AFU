@@ -692,6 +692,29 @@ footer a:hover {
     background-color: var(--accent-hover);
 }
 
+/* ЛР №5: кнопка «Видалити» перевизначає загальний стиль */
+#page-admin .btn-delete {
+    background-color: #DC2626;
+    margin-top: 0;
+    transform: none;
+    box-shadow: none;
+}
+#page-admin .btn-delete:hover {
+    background-color: #B91C1C;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ЛР №5: кнопка «Скасувати» у формі */
+#page-admin .btn-cancel {
+    background-color: #64748B;
+    margin-top: 0;
+}
+#page-admin .btn-cancel:hover {
+    background-color: #475569;
+    transform: none;
+}
+
 
 #page-contacts main > section {
     background-color: var(--bg-card);
