@@ -692,6 +692,7 @@ footer a:hover {
     background-color: var(--accent-hover);
 }
 
+
 #page-admin .btn-delete {
     background-color: #DC2626;
     margin-top: 0;
@@ -703,6 +704,7 @@ footer a:hover {
     transform: none;
     box-shadow: none;
 }
+
 
 #page-admin .btn-cancel {
     background-color: #64748B;

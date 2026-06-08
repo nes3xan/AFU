@@ -6,6 +6,7 @@
     <title>Реєстрація – AdsForYou</title>
     <link rel="stylesheet" href="styles.css">
     <style>
+        /* ── Стилі для форм авторизації ── */
         .form-error {
             color: #b52a2a;
             font-size: 0.82em;
@@ -120,9 +121,11 @@
     </footer>
 
     <script>
+ 
     function isValidEmail(email) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
+
 
     function showFieldError(inputId, errorId, message) {
         var input = document.getElementById(inputId);
@@ -131,12 +134,14 @@
         if (err)   { err.textContent = message; err.classList.add('visible'); }
     }
 
+
     function clearFieldError(inputId, errorId) {
         var input = document.getElementById(inputId);
         var err   = document.getElementById(errorId);
         if (input) input.classList.remove('input-error');
         if (err)   { err.textContent = ''; err.classList.remove('visible'); }
     }
+
 
     function clearAllErrors() {
         var pairs = [
@@ -151,6 +156,7 @@
         if (msg) msg.className = 'auth-message';
     }
 
+
     function showMessage(id, text, type) {
         var el = document.getElementById(id);
         if (!el) return;
@@ -158,15 +164,16 @@
         el.className   = 'auth-message ' + type;
     }
 
+   
     function getUsers() {
         var raw = localStorage.getItem('afu_users');
         return raw ? JSON.parse(raw) : [];
     }
-
     function saveUsers(users) {
         localStorage.setItem('afu_users', JSON.stringify(users));
     }
 
+   
     function handleRegister() {
         clearAllErrors();
 
@@ -177,6 +184,7 @@
         var confirm   = document.getElementById('reg-confirm-password').value;
         var valid     = true;
 
+    
         if (!firstName) {
             showFieldError('reg-firstname', 'err-firstname', 'Будь ласка, введіть ваше ім\'я.');
             valid = false;
@@ -185,6 +193,7 @@
             valid = false;
         }
 
+     
         if (!lastName) {
             showFieldError('reg-lastname', 'err-lastname', 'Будь ласка, введіть ваше прізвище.');
             valid = false;
@@ -193,6 +202,7 @@
             valid = false;
         }
 
+     
         if (!email) {
             showFieldError('reg-email', 'err-email', 'Будь ласка, введіть email.');
             valid = false;
@@ -201,6 +211,7 @@
             valid = false;
         }
 
+      
         if (!password) {
             showFieldError('reg-password', 'err-password', 'Будь ласка, введіть пароль.');
             valid = false;
@@ -209,6 +220,7 @@
             valid = false;
         }
 
+      
         if (!confirm) {
             showFieldError('reg-confirm-password', 'err-confirm', 'Будь ласка, підтвердіть пароль.');
             valid = false;
@@ -219,6 +231,7 @@
 
         if (!valid) return;
 
+        
         var users = getUsers();
         var emailExists = users.some(function(u) { return u.email === email; });
 
@@ -227,6 +240,7 @@
             return;
         }
 
+   
         var newUser = {
             firstName:    firstName,
             lastName:     lastName,
@@ -238,6 +252,7 @@
         users.push(newUser);
         saveUsers(users);
 
+       
         document.getElementById('reg-firstname').value        = '';
         document.getElementById('reg-lastname').value         = '';
         document.getElementById('reg-email').value            = '';
@@ -252,6 +267,7 @@
         }, 1800);
     }
 
+  
     var fieldPairs = [
         ['reg-firstname',        'err-firstname'],
         ['reg-lastname',         'err-lastname'],
