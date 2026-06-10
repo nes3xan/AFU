@@ -148,3 +148,23 @@ if (contactForm) {
         contactForm.reset();
     });
 }
+
+function initNav() {
+    var user = null;
+    try { user = JSON.parse(localStorage.getItem('afu_current_user')); } catch(e) {}
+    var gItems = document.querySelectorAll('.nav-guest-only');
+    var aItems = document.querySelectorAll('.nav-auth-only');
+    var mItems = document.querySelectorAll('.nav-admin-only');
+    var i;
+    if (user) {
+        for (i = 0; i < gItems.length; i++) gItems[i].style.display = 'none';
+        for (i = 0; i < aItems.length; i++) aItems[i].style.display = 'list-item';
+        for (i = 0; i < mItems.length; i++) mItems[i].style.display = (user.role === 'admin') ? 'list-item' : 'none';
+    } else {
+        for (i = 0; i < gItems.length; i++) gItems[i].style.display = 'list-item';
+        for (i = 0; i < aItems.length; i++) aItems[i].style.display = 'none';
+        for (i = 0; i < mItems.length; i++) mItems[i].style.display = 'none';
+    }
+}
+
+initNav();

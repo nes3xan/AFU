@@ -16,14 +16,14 @@
 
     <nav>
         <ul>
-            <li><a href="index.html">Головна сторінка</a></li>
+            <li><a href="index.html">Головна</a></li>
             <li><a href="about.html">Про агентство</a></li>
             <li><a href="services.html">Наші послуги</a></li>
             <li><a href="contacts.html">Контакти</a></li>
-            <li><a href="login.html">Вхід</a></li>
-            <li><a href="register.html">Реєстрація</a></li>
-            <li><a href="profile.html">Особистий кабінет</a></li>
-            <li><a href="admin.html">Адміністративна панель</a></li>
+            <li class="nav-guest-only"><a href="login.html">Вхід</a></li>
+            <li class="nav-guest-only"><a href="register.html">Реєстрація</a></li>
+            <li class="nav-auth-only"><a href="profile.html">Особистий кабінет</a></li>
+            <li class="nav-admin-only"><a href="admin.html">Адміністративна панель</a></li>
         </ul>
         <hr>
     </nav>
@@ -64,9 +64,14 @@
             .replace(/'/g,  '&#39;');
     }
 
+    var orderServices = {};
+
     function renderServices() {
+        var user = null;
+        try { user = JSON.parse(localStorage.getItem('afu_current_user')); } catch(e) {}
         var services = getServices();
         var main = document.getElementById('services-main');
+        orderServices = {};
         var html = '<section>' +
             '<h2>Що ми пропонуємо?</h2>' +
             '<p>Ми зосереджені на найефективніших інструментах платформ Instagram та TikTok. ' +
@@ -75,12 +80,17 @@
 
         for (var i = 0; i < services.length; i++) {
             var s = services[i];
+            orderServices[s.id] = s.title;
+            var orderBtn = user
+                ? '<button class="btn-order" onclick="openOrderForm(' + s.id + ')">Замовити</button>'
+                : '';
             html +=
                 '<section>' +
                 '<article>' +
                 '<h3>' + (i + 1) + '. ' + escapeHtml(s.title) + '</h3>' +
                 '<p>' + escapeHtml(s.description) + '</p>' +
                 '<p><strong>Ціна:</strong> ' + escapeHtml(s.price) + '</p>' +
+                orderBtn +
                 '</article>' +
                 '</section>';
         }
@@ -89,6 +99,82 @@
     }
 
     renderServices();
+    </script>
+
+    <div id="order-modal" class="modal-overlay" role="dialog" aria-modal="true">
+        <div class="modal-box">
+            <button id="order-modal-close" class="modal-close" aria-label="Закрити">&times;</button>
+            <h3 class="modal-title">Замовити послугу</h3>
+            <p id="order-service-label" class="order-service-label"></p>
+            <div class="order-fields">
+                <div>
+                    <label for="order-name">Ваше ім'я</label>
+                    <input type="text" id="order-name" placeholder="Наприклад: Олена Коваль">
+                </div>
+                <div>
+                    <label for="order-phone">Телефон</label>
+                    <input type="tel" id="order-phone" placeholder="+380">
+                </div>
+                <div>
+                    <label for="order-comment">Коментар</label>
+                    <textarea id="order-comment" placeholder="Опишіть коротко ваш запит..."></textarea>
+                </div>
+            </div>
+            <button class="btn-more" onclick="submitOrder()">Надіслати заявку</button>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="script.js"></script>
+
+    <script>
+    var activeOrderId = null;
+
+    function openOrderForm(serviceId) {
+        activeOrderId = serviceId;
+        var title = (orderServices && orderServices[serviceId]) ? orderServices[serviceId] : '';
+        var label = document.getElementById('order-service-label');
+        if (label) label.textContent = 'Послуга: ' + title;
+        document.getElementById('order-name').value = '';
+        document.getElementById('order-phone').value = '';
+        document.getElementById('order-comment').value = '';
+        var om = document.getElementById('order-modal');
+        if (om) { om.classList.add('is-open'); document.body.classList.add('modal-open'); }
+    }
+
+    function closeOrderForm() {
+        var om = document.getElementById('order-modal');
+        if (om) { om.classList.remove('is-open'); document.body.classList.remove('modal-open'); }
+    }
+
+    function submitOrder() {
+        var name    = document.getElementById('order-name').value.trim();
+        var phone   = document.getElementById('order-phone').value.trim();
+        var comment = document.getElementById('order-comment').value.trim();
+        if (!name) { showToast('Будь ласка, введіть ваше ім\'я.', 'error'); return; }
+        if (!phone) { showToast('Будь ласка, введіть номер телефону.', 'error'); return; }
+        var orders = [];
+        try { orders = JSON.parse(localStorage.getItem('afu_orders') || '[]'); } catch(e) {}
+        var serviceName = (orderServices && orderServices[activeOrderId]) ? orderServices[activeOrderId] : '';
+        orders.push({
+            id: Date.now(),
+            serviceId: activeOrderId,
+            serviceName: serviceName,
+            name: name,
+            phone: phone,
+            comment: comment,
+            date: new Date().toLocaleDateString('uk-UA')
+        });
+        localStorage.setItem('afu_orders', JSON.stringify(orders));
+        closeOrderForm();
+        showToast('Заявку прийнято! Ми зв\'яжемось із вами найближчим часом.', 'success');
+    }
+
+    document.getElementById('order-modal-close').addEventListener('click', closeOrderForm);
+    document.getElementById('order-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeOrderForm();
+    });
     </script>
 
 </body>
